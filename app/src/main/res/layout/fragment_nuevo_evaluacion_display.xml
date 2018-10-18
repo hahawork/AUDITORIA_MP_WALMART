@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".EvaluacionDisplay"
+    tools:showIn="@layout/activity_evaluacion_display">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:textAllCaps="true"
+            android:text="formato de evaluacion resumido display"
+            android:textColor="#000"
+            android:textStyle="bold" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/border_fill"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spnNombreDisp_NuevoRPT_ED"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:spinnerMode="dialog"
+                android:layout_height="match_parent"></Spinner>
+
+            <Button
+                android:layout_width="30dp"
+                android:id="@+id/btnAgregarDisplay_NuevoRPT_ED"
+                android:background="@android:drawable/ic_input_add"
+                android:layout_height="match_parent" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:hint="Nombre PDV"
+                android:background="@drawable/border_fill_white"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/actvNombrePDV_ED"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:completionThreshold="1"
+                    android:layout_weight="1"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="INDICADORES DE SERVICIO DISPLAY"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewEvaluacionDisplay"
+            android:layout_width="match_parent"
+            tools:context=".FragmentNuevoReporte"
+            tools:listitem="@layout/row_indicador"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

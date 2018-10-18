@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_nuevo"
+        android:icon="@drawable/ic_nuevo_reporte"
+        android:title="Nuevo Reporte" />
+
+    <item
+        android:id="@+id/navigation_ultimo"
+        android:icon="@drawable/ic_ultimo_reporte1"
+        android:title="Ult. Reporte" />
+
+    <item
+        android:id="@+id/navigation_todos"
+        android:icon="@drawable/ic_todos_losreportes"
+        android:title="Todos los Reportes" />
+
+</menu>

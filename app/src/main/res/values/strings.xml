@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AUDITORIA MP WALMART</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Grupo Valor</string>
+    <string name="nav_header_subtitle">Marketing One</string>
+    <string name="nav_header_desc">header</string>
+    <string name="title_activity_revision_pdv">Revision a pdv</string>
+    <string name="title_activity_evaluacion_display">Evaluación del Display</string>
+    <string name="title_activity_registro">Registro</string>
+
+
+    <string name="strTELEFONO">Teléfono</string>
+    <string name="strEMAIL">E-mail</string>
+
+</resources>

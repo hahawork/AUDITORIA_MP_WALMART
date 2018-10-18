@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvIndicador_fragmUltRepo_ED"
+            android:layout_width="0dp"
+            android:background="@drawable/shape_datos"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="11sp"
+            android:layout_marginRight="1dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/tvEvaluacion_fragmUltRepo_ED"
+            android:layout_width="0dp"
+            android:background="@drawable/shape_datos"
+            android:gravity="center|center_vertical"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="11sp"
+            android:layout_marginLeft="1dp"
+            android:text="TextView" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
