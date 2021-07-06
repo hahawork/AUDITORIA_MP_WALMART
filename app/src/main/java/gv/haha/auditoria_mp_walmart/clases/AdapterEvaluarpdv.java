@@ -2,10 +2,13 @@ package gv.haha.auditoria_mp_walmart.clases;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import gv.haha.auditoria_mp_walmart.R;
 import gv.haha.auditoria_mp_walmart.RevisionPdv;
+
+import static gv.haha.auditoria_mp_walmart.clases.Variables.CARPETA_RECURSOS;
 
 
 public class AdapterEvaluarpdv extends RecyclerView.Adapter<AdapterEvaluarpdv.MyViewHolder> {
@@ -53,28 +62,6 @@ public class AdapterEvaluarpdv extends RecyclerView.Adapter<AdapterEvaluarpdv.My
             holder.tvNumero.setText(String.valueOf(id));
             holder.tvIndicador.setText(indicador);
             holder.btnCamara.setVisibility(arrContenido.get(position).isPermiteFoto() ? View.VISIBLE : View.GONE);
-
-            holder.btnCamara.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    TomarFotoPara = position;
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if  (mContext.checkSelfPermission(Manifest.permission.CAMERA)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            ((Activity)mContext).requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                    110);
-                        } else {
-                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            ((Activity)mContext).startActivityForResult(cameraIntent, 113);
-                        }
-                    }else {
-                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        ((Activity)mContext).startActivityForResult(cameraIntent, 113);
-                    }
-                }
-            });
             // implement setOnClickListener event on item view.
 
 

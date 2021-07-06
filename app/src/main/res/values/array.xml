@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="ArrCATEGORIAS">
+        <item>COMIDA PARA BEBÉ</item>
+        <item>MEZCLAS Y SUMINISTRO PARA COCINAR</item>
+        <item>FRIJOLES Y LENTEJAS-D92</item>
+        <item>FRIJOLES Y LENTEJAS-D94</item>
+        <item>BEBIDAS ALCOHOLICAS</item>
+        <item>BEBIDAS - CARBONADAS</item>
+        <item>BEBIDAS - CAFÉ-D95</item>
+        <item>BEBIDAS - SABORIZADAS-D95</item>
+        <item>BEBIDAS - JUGO-D90</item>
+        <item>BEBIDAS - JUGO-D95</item>
+        <item>BEBIDAS - TEA-D95</item>
+        <item>BEBIDAS - AGUA-D95</item>
+        <item>PAN ESTABLE D81</item>
+        <item>DESAYUNO-CONGELADO D91</item>
+        <item>DESAYUNO-CEREAL D92</item>
+        <item>CARAMELO - DURO - SOFT-D01</item>
+        <item>VARIEDAD DE SNACK</item>
+        <item>CONDIMENTOS Y VARIEDADES-D92</item>
+        <item>GALLETAS-D92</item>
+        <item>GALLETAS- SABORIZADAS-D92</item>
+        <item>TOP DE POSTRE, RELLENO, BASE-D92</item>
+        <item>FUEGO Y COMBUSTIBLE D82</item>
+        <item>FRUTO - SECADO-D92</item>
+        <item>FRUTA - ESTANTE-D92</item>
+        <item>MIEL Y JARABE-D92</item>
+        <item>LECHE Y CREMA-SUBSTUT-SHELF-D95</item>
+        <item>Fideos - ASIAN-D92</item>
+        <item>Nueces y semillas comestibles-D92</item>
+        <item>ACEITES Y GRASAS-D92</item>
+        <item>PASTA-D92</item>
+        <item>ARROZ Y GRANOS-D92</item>
+        <item>ARROZ Y GRANOS-D94</item>
+        <item>ENSALADA-DIP-TOPPING-D92</item>
+        <item>SUBSTITUTOS DE SAL Y SAL - D92</item>
+        <item>SALSAS Y MARINADAS-D92</item>
+        <item>MARISCOS-PESCADOS-D92</item>
+        <item>HIERBA DE LA ESPECIA</item>
+        <item>SOPAS - INSTANTÁNEAS Y MEZCLAS-D92</item>
+        <item>SOPAS - ESTANTE -D92</item>
+        <item>SUSTITUTOS DE AZUCAR-D92</item>
+        <item>DIFERENTES Y PRESERVAS DULCES-D92</item>
+        <item>LEGUMBRES - CONGELADOS D91</item>
+        <item>VEGETALES-ESTANTE ESTABLE-D92</item>
+        <item>VINAGARES Y VINOS DE COCCIÓN-D92</item>
+        <item>QUESOS-D90</item>
+        <item>FRUTO - CONGELADO D91</item>
+        <item>PIZZA D91</item>
+        <item>CORTE PREFORMADO Y FRIO-D80</item>
+        <item>CORTE PREFORMADO Y FRIO-D97</item>
+        <item>Aire fresco y desodorizado-D13</item>
+        <item>CUIDADO DEL BEBÉ D69</item>
+        <item>DIAPERS DE BEBÉ Y ENTRENAMIENTO D69</item>
+        <item>BOLSAS Y ENVOLTURAS D04</item>
+        <item>BAÑO Y SPA-D02</item>
+        <item>BLANQUEADORES</item>
+        <item>LIMPIADORES - PISO D13</item>
+        <item>LIMPIADORES - HOGARES D13</item>
+        <item>COSMÉTICOS - UÑAS D59</item>
+        <item>COSMÉTICOS - HERRAMIENTAS D59</item>
+        <item>CUIDADO FACIAL D46</item>
+        <item>PAPEL FACIAL D04</item>
+        <item>CUIDADO DEL CABELLO - SHAMPOO D02</item>
+        <item>HERRAMIENTAS - AFEITADOS D02</item>
+        <item>CABELLO - ACCESORIOS D02</item>
+        <item>CABELLO - PRODUCTOS D02</item>
+        <item>CABELLO - HERRAMIENTAS D02</item>
+        <item>LOCION DE MANO Y CUERPO-ACEITE-CRM D46</item>
+        <item>LAVADO DE MANOS Y CUERPO D02</item>
+        <item>DETERGENTES DE LAVANDERIA D13</item>
+        <item>CUIDADO DE LA TELA PARA LAVANDERÍA D13</item>
+        <item>AMBIENTADOR DE LAVANDERÍA-AMBIENTADOR D13</item>
+        <item>SERVILLETAS</item>
+        <item>CUIDADO ORAL-ACCESORIOS D02</item>
+        <item>LAVADO BUCAL</item>
+        <item>CEPILLOS DE DIENTES ORALES D02</item>
+        <item>CUIDADO ORAL TOOTHPST- WHITENR D02</item>
+        <item>TOALLAS DE PAPEL D04</item>
+        <item>JUGUETES Y ACCESORIOS PARA MASCOTAS D08</item>
+        <item>VAJILLAS DESECHABLE D04</item>
+        <item>PAPEL DE BAÑO D04</item>
+        <item>BOLSAS DE BASURA D04</item>
+        <item>SET DE VIAJE-D02</item>
+        <item>INCONTINENCIA DE ADULTOS D40</item>
+        <item>SALUD - NUTRICION D40</item>
+        <item>CUIDADO-DENTURA ORAL CUIDADO-D02</item>
+        <item>CUIDADO SOLAR+D38D1:D87</item>
+    </array>
+</resources>

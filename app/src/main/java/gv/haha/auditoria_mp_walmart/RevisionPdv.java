@@ -6,19 +6,27 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +51,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -86,8 +95,21 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
 
     RecyclerView recyclerView;
     ArrayList<Contenido> arrContenido = new ArrayList<>();
+    static Uri ImagenTomadaCamara = null;
+    int FotoParaIndSeleccionado = 0;
+
+    ArrayList<String> arrFotosInd1 = new ArrayList<>();
     ArrayList<String> arrFotosInd2 = new ArrayList<>();
+    ArrayList<String> arrFotosInd3 = new ArrayList<>();
     ArrayList<String> arrFotosInd4 = new ArrayList<>();
+    ArrayList<String> arrFotosInd5 = new ArrayList<>();
+    ArrayList<String> arrFotosInd6 = new ArrayList<>();
+    ArrayList<String> arrFotosInd7 = new ArrayList<>();
+    ArrayList<String> arrFotosInd8 = new ArrayList<>();
+    ArrayList<String> arrFotosInd9 = new ArrayList<>();
+    ArrayList<String> arrFotosInd10 = new ArrayList<>();
+
+
     public static View.OnClickListener myOnClickListener;
     static SimpleDateFormat format_fecha = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat format_hora = new SimpleDateFormat("hh:mm a");
@@ -122,6 +144,10 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Explode());
+        }
     }
 
     private void iniciarComponentes() {
@@ -182,9 +208,8 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        // set a LinearLayoutManager with default vertical orientation
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        // set a GridLayoutManager with default vertical orientation
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         // call the constructor of AdapterEvaluarpdv to send the reference and data to Adapter
         getDataIndicadores();
         AdapterEvaluarpdv customAdapter = new AdapterEvaluarpdv(RevisionPdv.this, arrContenido);
@@ -273,7 +298,7 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
                             );
                             for (cRptDetFotos.moveToFirst(); !cRptDetFotos.isAfterLast(); cRptDetFotos.moveToNext()) {
                                 int indicador = cRptDetFotos.getInt(cRptDetFotos.getColumnIndex("idIndicad"));
-                                if (indicador == 2) {
+                                //if (indicador == 2) {
                                     String pathfoto = cRptDetFotos.getString(cRptDetFotos.getColumnIndex("pathFoto"));
                                     File foto = new File(pathfoto);
                                     if (foto.exists()) {
@@ -283,7 +308,8 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
                                         String where = "Idfoto = " + cRptDetFotos.getString(cRptDetFotos.getColumnIndex("Idfoto"));
                                         baseDatos.BorrarRegistroWhere(TBL_FOTO_INDCADOR, where);
                                     }
-                                } else if (indicador == 4) {
+                               // }
+                                /*else if (indicador == 4) {
 
                                     String pathfoto = cRptDetFotos.getString(cRptDetFotos.getColumnIndex("pathFoto"));
                                     File foto = new File(pathfoto);
@@ -295,7 +321,7 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
                                         baseDatos.BorrarRegistroWhere(TBL_FOTO_INDCADOR, where);
                                     }
 
-                                }
+                                }*/
                             }
 
 
@@ -466,8 +492,8 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
         final TextInputEditText etPendiente = (TextInputEditText) dialogIntro.findViewById(R.id.etPendiente_dg_indicador);
         final EditText etComentario = (EditText) dialogIntro.findViewById(R.id.etComentarios_dg_indicador);
 
-        etAplicado.setText(String.valueOf(arrContenido.get(Indicad).getAplicado()));
-        etPendiente.setText(String.valueOf(arrContenido.get(Indicad).getPendiente()));
+        etAplicado.setText((arrContenido.get(Indicad).getAplicado() > 0) ? String.valueOf(arrContenido.get(Indicad).getAplicado()) : "");
+        etPendiente.setText((arrContenido.get(Indicad).getPendiente() > 0) ? String.valueOf(arrContenido.get(Indicad).getPendiente()) : "");
         etComentario.setText(String.valueOf(arrContenido.get(Indicad).getComentario()));
 
         ((TextView) dialogIntro.findViewById(R.id.tvIndicadorSelecc_dg_indicador)).setText(arrContenido.get(Indicad).getIndicador());
@@ -537,6 +563,9 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id==android.R.id.home){
+
+        }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_send) {
             VerificarRequerimientosParaReporte();
@@ -609,10 +638,10 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         // check that it is the SecondActivity with an OK result
 
-        if (resultCode == RESULT_OK && data != null) {
+        if (resultCode == RESULT_OK) {
 
             //firma MP
-            if (requestCode == 111) {
+            if (requestCode == 111 & data != null) {
                 bmFirmaMP = BitmapFactory.decodeByteArray(
                         data.getByteArrayExtra("byteArray"), 0,
                         data.getByteArrayExtra("byteArray").length);
@@ -621,7 +650,7 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
                 GuardaImagenMemoria(bmFirmaMP, "ultimafirmamp.png");
             }
             //firma PDV
-            if (requestCode == 112) {
+            if (requestCode == 112 & data != null) {
                 bmFirmaPDV = BitmapFactory.decodeByteArray(
                         data.getByteArrayExtra("byteArray"), 0,
                         data.getByteArrayExtra("byteArray").length);
@@ -635,49 +664,66 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
             // tomar foto desde la camara
             if (requestCode == 113) {
                 try {
-
+                    Uri selectedImageUri;
                     //si aun no hay un registro temporal en la DB se guarda
                     if (idRptEncabezadoActual == 0) {
                         guardarTemporal(estadoTerminado);
                     }
 
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    selectedImageUri = ImagenTomadaCamara;
 
                     //obtine la posicion del indicador al que se va a adjuntar la foto tomada
-                    int FotoParaInd = new AdapterEvaluarpdv(this, null).getTomarFotoPara();
-                    String fecha = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    int idIndicador = arrContenido.get(FotoParaInd).getNumIndicador();
-                    String fileName = String.format("DBEnc%d_DBDet%d_Ind%d_Pdv%s_Fecha%s.png",
-                            idRptEncabezadoActual,
-                            arrContenido.get(FotoParaInd).getIdGuardadoLocaldb(),
-                            idIndicador,
-                            tvPDV.getText().toString().replace(" ", ""),
-                            fecha);
+                    int idIndicador = arrContenido.get(FotoParaIndSeleccionado).getNumIndicador();
 
-
-                    GuardaImagenMemoria(photo, fileName);
 
                     AgregarImagenLLayout(
-                            CARPETA_RECURSOS + fileName,
-                            idIndicador == 2 ? llFotosInd2 : llFotosIndic4);
+                            selectedImageUri.getPath(),llFotosInd2);
 
                     //guardamos el registro de la foto en la Db
                     ContentValues values = new ContentValues();
                     values.put("Idfoto", (byte[]) null);
                     values.put("idRptEnc", idRptEncabezadoActual);
-                    values.put("idRptDet", arrContenido.get(FotoParaInd).getIdGuardadoLocaldb());
-                    values.put("idIndicad", arrContenido.get(FotoParaInd).getNumIndicador());
-                    values.put("pathFoto", CARPETA_RECURSOS + fileName);
+                    values.put("idRptDet", arrContenido.get(FotoParaIndSeleccionado).getIdGuardadoLocaldb());
+                    values.put("idIndicad", arrContenido.get(FotoParaIndSeleccionado).getNumIndicador());
+                    values.put("pathFoto", selectedImageUri.getPath());
                     values.put("FechaToma", format_fechahora.format(new Date()));
 
-                    baseDatos.insertarRegistro(TBL_FOTO_INDCADOR, values);
+                    Long id = baseDatos.insertarRegistro(TBL_FOTO_INDCADOR, values);
 
+
+                    if (idIndicador == 1) {
+                        arrFotosInd1.add(selectedImageUri.getPath());
+                    }
                     if (idIndicador == 2) {
-                        arrFotosInd2.add(CARPETA_RECURSOS + fileName);
+                        arrFotosInd2.add(selectedImageUri.getPath());
+                    }
+                    if (idIndicador == 3) {
+                        arrFotosInd3.add(selectedImageUri.getPath());
                     }
                     if (idIndicador == 4) {
-                        arrFotosInd4.add(CARPETA_RECURSOS + fileName);
+                        arrFotosInd4.add(selectedImageUri.getPath());
                     }
+                    if (idIndicador == 5) {
+                        arrFotosInd5.add(selectedImageUri.getPath());
+                    }
+                    if (idIndicador == 9) {
+                        arrFotosInd9.add(selectedImageUri.getPath());
+                    }
+                    if (idIndicador == 6) {
+                        arrFotosInd6.add(selectedImageUri.getPath());
+                    }
+                    if (idIndicador == 7) {
+                        arrFotosInd7.add(selectedImageUri.getPath());
+                    }
+                    if (idIndicador == 8) {
+                        arrFotosInd8.add(selectedImageUri.getPath());
+                    }
+                    if (idIndicador == 10) {
+                        arrFotosInd10.add(selectedImageUri.getPath());
+                    }
+
+                    new classCustomToast(this).Toast("Ind: " + arrContenido.get(FotoParaIndSeleccionado).getNumIndicador() +
+                            ", Se ha guardado la foto. con el id " + id, R.drawable.ic_success);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -689,20 +735,22 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
 
     private void AgregarImagenLLayout(String path, LinearLayout llfotos) {
         try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            //options.inSampleSize = 7;
-            Bitmap bmp = BitmapFactory.decodeFile(path, options);
+            File foto = new File(path);
+            if (foto.exists()) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 5;
+                Bitmap bmp = BitmapFactory.decodeFile(path, options);
 
-            LinearLayout.LayoutParams params = new LinearLayout
-                    .LayoutParams(79, 79);
-            ImageView item = new ImageView(this);
-            item.setOnClickListener(this);
-            item.setLayoutParams(params);
-            item.isClickable();
-            item.hasOnClickListeners();
-            item.setImageBitmap(bmp);
-            llfotos.addView(item);
-
+                LinearLayout.LayoutParams params = new LinearLayout
+                        .LayoutParams(79, 79);
+                ImageView item = new ImageView(this);
+                item.setOnClickListener(this);
+                item.setLayoutParams(params);
+                item.isClickable();
+                item.hasOnClickListeners();
+                item.setImageBitmap(bmp);
+                llfotos.addView(item);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -879,7 +927,9 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
             posicIndicadores[i] = posicFila;
 
             HSSFRow dataRow = sheet.createRow(posicFila++);
-            if (arrContenido.get(i).getNumIndicador() == 2 || arrContenido.get(i).getNumIndicador() == 4) {
+            //si al menos un indicador tiene fotografia
+            if (arrFotosInd1.size() > 0 || arrFotosInd2.size() > 0 || arrFotosInd3.size() > 0 || arrFotosInd4.size() > 0 || arrFotosInd5.size() > 0
+                    || arrFotosInd6.size() > 0 || arrFotosInd7.size() > 0 || arrFotosInd8.size() > 0 || arrFotosInd9.size() > 0 || arrFotosInd10.size() > 0) {
                 dataRow.setHeightInPoints(80);
             }
 
@@ -998,16 +1048,65 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
         }
 
         //se agregan las fotos a la fila segun el indicador
-        int posicFoto2 = 5;//la columna inicial,luego incremente en 2 para separacion de fotos
+        int posicFoto1 = 5;//la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd1.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[0], posicFoto1, workbook, sheet, arrFotosInd1.get(i));
+            posicFoto1 = posicFoto1 + 2;
+        }
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto2 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
         for (int i = 0; i < arrFotosInd2.size(); i++) {
             agregarFotosAlArchivoExcel(posicIndicadores[1], posicFoto2, workbook, sheet, arrFotosInd2.get(i));
             posicFoto2 = posicFoto2 + 2;
+        }
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto3 = 5;//la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd3.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[2], posicFoto3, workbook, sheet, arrFotosInd3.get(i));
+            posicFoto3 = posicFoto3 + 2;
         }
         //se agregan las fotos a la fila segun el indicador
         int posicFoto4 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
         for (int i = 0; i < arrFotosInd4.size(); i++) {
             agregarFotosAlArchivoExcel(posicIndicadores[3], posicFoto4, workbook, sheet, arrFotosInd4.get(i));
             posicFoto4 = posicFoto4 + 2;
+        }
+
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto5 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd5.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[4], posicFoto5, workbook, sheet, arrFotosInd5.get(i));
+            posicFoto5 = posicFoto5 + 2;
+        }
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto6 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd6.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[5], posicFoto6, workbook, sheet, arrFotosInd6.get(i));
+            posicFoto6 = posicFoto6 + 2;
+        }
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto7 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd7.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[6], posicFoto7, workbook, sheet, arrFotosInd7.get(i));
+            posicFoto7 = posicFoto7 + 2;
+        }
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto8 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd8.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[7], posicFoto8, workbook, sheet, arrFotosInd8.get(i));
+            posicFoto8 = posicFoto8 + 2;
+        }
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto9 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd9.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[8], posicFoto9, workbook, sheet, arrFotosInd9.get(i));
+            posicFoto9 = posicFoto9 + 2;
+        }
+        //se agregan las fotos a la fila segun el indicador
+        int posicFoto10 = 5; //la columna inicial,luego incremente en 2 para separacion de fotos
+        for (int i = 0; i < arrFotosInd10.size(); i++) {
+            agregarFotosAlArchivoExcel(posicIndicadores[9], posicFoto10, workbook, sheet, arrFotosInd10.get(i));
+            posicFoto10 = posicFoto10 + 2;
         }
 
         // Create a path where we will place our List of objects on external storage
@@ -1084,11 +1183,64 @@ public class RevisionPdv extends AppCompatActivity implements View.OnClickListen
         }
 
         private void IndicadorSeleccionado(View v) {
-            int selectedItemPosition = recyclerView.getChildPosition(v);
+
+            final int selectedItemPosition = recyclerView.getChildPosition(v);
 
             DialogoDetalleIndicador(selectedItemPosition);
 
+            Button btnCamara = (Button) v.findViewById(R.id.btnCamara_indicador);
+            btnCamara.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //si aun no hay un registro temporal en la DB se guarda
+                    if (idRptEncabezadoActual == 0) {
+                        guardarTemporal(estadoTerminado);
+                    }
+
+                    if (tvPDV.getText().toString().length() > 0) {
+                        FotoParaIndSeleccionado = selectedItemPosition;
+                        TomarFotografia(
+                                arrContenido.get(selectedItemPosition).getNumIndicador(),
+                                tvPDV.getText().toString()
+                        );
+                    } else {
+                        new classCustomToast(RevisionPdv.this).Show_ToastError("Primero ingrese nombre del pdv.");
+                    }
+                }
+            });
+
             // Toast.makeText(RevisionPdv.this, String.format("Has seleccionado %s", arrContenido.get(selectedItemPosition).getIndicador()), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void TomarFotografia(int idIndicador, String nombreTienda) {
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        } else {
+
+            final File root = new File(CARPETA_RECURSOS);
+            if (!root.exists())
+                root.mkdirs();
+
+
+            String fileName = String.format("DBEnc%d_DBDet%d_Ind%d_Pdv%s_Fecha%s.jpg",
+                    idRptEncabezadoActual,
+                    arrContenido.get(idIndicador).getIdGuardadoLocaldb(),
+                    idIndicador,
+                    nombreTienda.replace(" ", ""),
+                    new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            ImagenTomadaCamara = Uri.fromFile(new File(CARPETA_RECURSOS + fileName));
+            //si no va falla al abrir la camara en el j2 tambien debe de ir cuando se obtiene un archivo dsdd la memoria
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+            //******************************************************
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, ImagenTomadaCamara);
+            startActivityForResult(intent, 113);
         }
     }
 

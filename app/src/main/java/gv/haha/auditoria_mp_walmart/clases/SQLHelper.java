@@ -5,14 +5,21 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.json.JSONObject;
+
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_ACTIVIDAD_COMERCIAL_DATA;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_CAT_INDICADORES;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_DATA_HAND_HELD;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_DATA_HAND_HELD_PDV;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_EVAL_DISPLAY_DET;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_EVAL_DISPLAY_ENC;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_FOTO_INDCADOR;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_NOMBRE_DISPLAY;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_OPORTUNIDADES;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_PUNTOSDEVENTA;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_DETALLE;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_ENCABEZADO;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_RPT_ACTIVIDAD_COMERCIAL;
 
 public class SQLHelper extends SQLiteOpenHelper {
 
@@ -93,6 +100,62 @@ public class SQLHelper extends SQLiteOpenHelper {
             "EstadoEnviado integer, " +
             "idEnviado integer)";
 
+    String TBLDATAACTIVIDCOMERCIAL = "create table if not exists " + TBL_ACTIVIDAD_COMERCIAL_DATA + "(" +
+            "iddata integer primary key, " +
+            "Llave varchar(20), " +
+            "Formato varchar(20), " +
+            "Item varchar(20), " +
+            "Presentacion varchar(150), " +
+            "Nomenclatura varchar(20), " +
+            "Espacio varchar(50), " +
+            "Area varchar(5), " +
+            "NumTienda integer, " +
+            "NombTienda varchar(50), " +
+            "Inventario integer, " +
+            "FechaSubido timestamp)";
+
+    String TBLRPTACTIVCOMERC = "CREATE TABLE IF NOT EXISTS " + TBL_RPT_ACTIVIDAD_COMERCIAL + " (" +
+            "idRptActivComerc INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "idData integer,  " +
+            "FechaSubido varchar(100), " +
+            "implementacion integer, " +
+            "BajoInventario integer, " +
+            "FechaRegistro timestamp, " +
+            "InventarioActual integer, " +
+            //"SinInventario integer, " +
+            //"SinAplicar integer, " +
+            "fotopath varchar(100), " +
+            "EstadoEnviado integer, " +
+            "idEnviado integer)";
+
+    String TBLOPORTUNIDADES = "CREATE TABLE IF NOT EXISTS " + TBL_OPORTUNIDADES + " (" +
+            "idOport INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "Pais varchar(20), " +
+            "Tienda varchar(100), " +
+            "Categoria varchar(100), " +
+            "Formato varchar(100), " +
+            "Oportunidad varchar(100), " +
+            "AreaResponsable varchar(100), " +
+            "Producto varchar(100), " +
+            "Solucion varchar(500), " +
+            "PathFoto1 varchar(100), " +
+            "PathFoto2 varchar(100)," +
+            "FechaReg datetime)";
+
+    String TBLHANDHELD = "CREATE TABLE IF NOT EXISTS " + TBL_DATA_HAND_HELD + " (" +
+            "idHandHeld int NOT NULL, " +
+            "Llave varchar(20), " +
+            "UPC varchar(30), " +
+            "Item varchar(20), " +
+            "Descripcion varchar(100), " +
+            "NumTienda iNT, " +
+            "NombTienda varchar(100), " +
+            "CantExistencia int, " +
+            "FechaReg timestamp)";
+
+    String TBLHANDHELDPDV = "CREATE TABLE IF NOT EXISTS " + TBL_DATA_HAND_HELD_PDV + " (" +
+            "NumeroTienda integer, " +
+            "NombreTienda varchar(50))";
 
     public SQLHelper(Context context) {
         super(context, "WalmartMP.db", null, 1);
@@ -102,6 +165,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
+
         sqLiteDatabase.execSQL(TBLPDV);
         sqLiteDatabase.execSQL(TBLRPTENCAB);
         sqLiteDatabase.execSQL(TBLRPTDETALLE);
@@ -110,6 +174,11 @@ public class SQLHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(TBLNOMBREDISPLAY);
         sqLiteDatabase.execSQL(TBLEVALDISPLAYENC);
         sqLiteDatabase.execSQL(TBLEVALDISPLAYDET);
+        sqLiteDatabase.execSQL(TBLDATAACTIVIDCOMERCIAL);
+        sqLiteDatabase.execSQL(TBLRPTACTIVCOMERC);
+        sqLiteDatabase.execSQL(TBLHANDHELD);
+        sqLiteDatabase.execSQL(TBLHANDHELDPDV);
+        sqLiteDatabase.execSQL(TBLOPORTUNIDADES);
     }
 
     @Override

@@ -82,6 +82,8 @@
         <Button
             android:id="@+id/btnGuardar_dg_indicador"
             android:layout_width="0dp"
+            android:background="@drawable/border"
+            android:layout_margin="1dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Guardar" />
@@ -89,6 +91,8 @@
         <Button
             android:id="@+id/btnCancelar_dg_indicador"
             android:layout_width="0dp"
+            android:background="@drawable/border"
+            android:layout_margin="1dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cancelar" />

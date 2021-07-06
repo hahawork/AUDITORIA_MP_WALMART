@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="gv.haha.auditoria_mp_walmart">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -10,13 +11,27 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
+        android:name=".clases.ClassMyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".CrearPresentaciones"
+            android:label="@string/title_activity_crear_presentaciones"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gv.haha.auditoria_mp_walmart.MainActivity" />
+        </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -75,12 +90,60 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".VerDatosExistentes"
-            android:label="Ver Datos Existentes"
+        <activity
+            android:name=".ActividadComercial"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="Actividad Comercial"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".EnviosPendientes"
+            android:label="@string/title_activity_envios_pendientes"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gv.haha.auditoria_mp_walmart.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Oportunidades"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_oportunidades"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gv.haha.auditoria_mp_walmart.MainActivity" />
+        </activity>
+        <activity
+            android:name=".HandHeld"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_hand_held"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gv.haha.auditoria_mp_walmart.MainActivity" />
+        </activity>
+        <activity
+            android:name=".HandHeldModal"
+            android:label="HandHeld"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogCustom" />
+        <activity
+            android:name=".Configuracion"
+            android:label="@string/title_activity_configuracion"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gv.haha.auditoria_mp_walmart.MainActivity" />
         </activity>
     </application>
 

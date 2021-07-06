@@ -1,146 +1,31 @@
 package gv.haha.auditoria_mp_walmart.clases;
-/*
-import android.util.Log;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by anupamchugh on 29/08/16.
- *
-public class JSONParser {
-
-    static InputStream is = null;
-    static JSONObject jObj = null;
-    static JSONArray jArr = null;
-    static String json = "";
-    static String error = "";
-
-    // constructor
-    public JSONParser() {
-
-    }
-
-    // function get json from url
-    // by making HTTP POST or GET mehtod
-    public JSONObject makeHttpRequest(String url, String method,
-                                      ArrayList params) {
-
-        // Making HTTP request
-        try {
-
-            // check for request method
-            if(method.equals("POST")){
-                // request method is POST
-                // defaultHttpClient
-                HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(url);
-                httpPost.setEntity(new UrlEncodedFormEntity(params));
-                try {
-                    Log.e("API123", " " +convertStreamToString(httpPost.getEntity().getContent()));
-                    Log.e("API123",httpPost.getURI().toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                Log.e("API123",""+httpResponse.getStatusLine().getStatusCode());
-                error= String.valueOf(httpResponse.getStatusLine().getStatusCode());
-                HttpEntity httpEntity = httpResponse.getEntity();
-                is = httpEntity.getContent();
-
-            }else if(method.equals("GET")){
-                // request method is GET
-                DefaultHttpClient httpClient = new DefaultHttpClient();
-                String paramString = URLEncodedUtils.format(params, "utf-8");
-                url += "?" + paramString;
-                HttpGet httpGet = new HttpGet(url);
-
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                HttpEntity httpEntity = httpResponse.getEntity();
-                is = httpEntity.getContent();
-            }
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "iso-8859-1"), 8);
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            is.close();
-            json = sb.toString();
-            Log.d("API123",json);
-        } catch (Exception e) {
-            Log.e("Buffer Error", "Error converting result " + e.toString());
-        }
-
-        // try to parse the string to a JSON object
-        try {
-            jObj = new JSONObject(json);
-            jObj.put("error_code",error);
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
-
-        // return JSON String
-        return jObj;
-
-    }
-
-    private String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-        is.close();
-        return sb.toString();
-    }
-}
-*/
+ * Created by HAHA on 4/10/2016.
+ */
 
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -169,23 +54,42 @@ public class JSONParser {
     public JSONObject makeHttpRequest(String url, String method,
                                       List<NameValuePair> params) {
 
+        DefaultHttpClient httpClient = null;
+
         // Making HTTP request
         try {
+
+            // Setup a custom SSL Factory object which simply ignore the certificates validation and accept all type of self signed certificates
+            SSLSocketFactory sslFactory = new SimpleSSLSocketFactory(null);
+            sslFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+            // Enable HTTP parameters
+            HttpParams params1 = new BasicHttpParams();
+            HttpProtocolParams.setVersion(params1, HttpVersion.HTTP_1_1);
+            HttpProtocolParams.setContentCharset(params1, HTTP.UTF_8);
+
+            // Register the HTTP and HTTPS Protocols. For HTTPS, register our custom SSL Factory object.
+            SchemeRegistry registry = new SchemeRegistry();
+            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            registry.register(new Scheme("https", sslFactory, 443));
+
+            // Create a new connection manager using the newly created registry and then create a new HTTP client using this connection manager
+            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params1, registry);
+            httpClient = new DefaultHttpClient(ccm, params1);
 
             // check for request method
             if (method == "POST") {
                 // request method is POST
                 // defaultHttpClient
-                DefaultHttpClient httpClient = new DefaultHttpClient();
+                DefaultHttpClient httpClient1 = new DefaultHttpClient(ccm,params1);
                 HttpPost httpPost = new HttpPost(url);
                 httpPost.setEntity(new UrlEncodedFormEntity(params));
 
                 try {
-                    HttpResponse httpResponse = httpClient.execute(httpPost); // envia
+                    HttpResponse httpResponse = httpClient1.execute(httpPost); // envia
 
                     HttpEntity httpEntity = httpResponse.getEntity();       // recupera
                     is = httpEntity.getContent();
-
                 } catch (ClientProtocolException e) {
                     e.printStackTrace();
                 }
@@ -193,13 +97,13 @@ public class JSONParser {
             } else if (method == "GET") {
                 // request method is GET
                 try {
-                    DefaultHttpClient httpClient = new DefaultHttpClient();
+                    DefaultHttpClient httpClient2 = new DefaultHttpClient(ccm,params1);
                     String paramString = URLEncodedUtils.format(params, "utf-8");
                     url += "?" + paramString;
 
                     HttpGet httpGet = new HttpGet(url);
 
-                    HttpResponse httpResponse = httpClient.execute(httpGet);
+                    HttpResponse httpResponse = httpClient2.execute(httpGet);
                     HttpEntity httpEntity = httpResponse.getEntity();
                     is = httpEntity.getContent();
                 }catch (UnknownHostException uhe){
@@ -233,7 +137,7 @@ public class JSONParser {
 
             try {
                 if (json.length()>0)
-                    jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
+                jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
             } catch (Exception e0) {
 
                 Log.e("JSON Parser0", "Error parsing data0 [" + e0.getMessage() + "] " + json);

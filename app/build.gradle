@@ -1,21 +1,31 @@
+//noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
+    archivesBaseName = "audit_mp_walmart"
     defaultConfig {
         applicationId "gv.haha.auditoria_mp_walmart"
         useLibrary 'org.apache.http.legacy'
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "1.2"
+        versionName "2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs("es")
         flavorDimensions "default"
         // Enabling multidex support.
         multiDexEnabled true
+
     }
     buildTypes {
+
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                outputFileName = new File("audit_mp_walmart-" + variant.versionName + ".apk");
+            }
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
@@ -26,7 +36,20 @@ android {
         es {
             resConfigs "es"
         }
+        /*prod {
+            resConfigs "es"
+            applicationId "gv.haha.auditoria_mp_walmart"
+            targetSdkVersion 26
+            dimension "default"
+            versionCode 1
+            versionName '1.7'
+            //versionNameSuffix '-prod'
+            buildConfigField 'String', 'HOST', '"http://www.grupovalor.com.ni/"'
+            buildConfigField 'String', 'GOOGLE', '"https://maps.googleapis.com/"'
+            //resValue "string", "app_name", "AUDITORIA MP WALMART"
+        }*/
     }
+
     lintOptions {
         //checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
@@ -38,6 +61,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
@@ -52,10 +76,19 @@ dependencies {
     implementation 'dev.dworks.libs:volleyplus:+'
     //para enviar fotografias al servidor
     implementation 'net.gotev:uploadservice:3.0'
-
+    //para usar el codigo de barras los 2
+    implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    implementation 'com.google.zxing:core:3.3.0'
+    //para el seekbar con 2 direcciones
+    implementation 'com.appyvet:materialrangebar:1.4.4'
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/opencsv.jar')
+    implementation files('libs/commons-net-3.6.jar')
 }

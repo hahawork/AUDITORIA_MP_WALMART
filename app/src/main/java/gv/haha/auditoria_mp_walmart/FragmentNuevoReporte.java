@@ -218,7 +218,7 @@ public class FragmentNuevoReporte extends Fragment {
                         dialog.cancel();
 
                     } else {
-                        new classCustomToast(getActivity()).Show_ToastError("Revisa la conexión a internet.");
+                        new classCustomToast(getActivity()).Show_ToastError("No tienes conexión a internet.");
                     }
 
                 } else
@@ -263,7 +263,7 @@ public class FragmentNuevoReporte extends Fragment {
 
                                     ContentValues values = new ContentValues();
                                     values.put("idNombDispl", (byte[]) null);
-                                    values.put("Nombre", params.get(0).getValor());
+                                    values.put("Nombre", G.remover_acentos(params.get(0).getValor()));
                                     values.put("EstadoEnviado", 1);
                                     values.put("idEnviado", idInsertado);
 
@@ -293,7 +293,7 @@ public class FragmentNuevoReporte extends Fragment {
                 protected Map<String, String> getParams() {
                     Map<String, String> parameters = new HashMap<String, String>();
                     for (int i = 0; i < params.size(); i++)
-                        parameters.put(params.get(i).getParametro(), params.get(i).getValor());
+                        parameters.put(params.get(i).getParametro(),G.remover_acentos(params.get(i).getValor()));
 
                     return parameters;
                 }
@@ -508,7 +508,7 @@ public class FragmentNuevoReporte extends Fragment {
                 etNombrePDV.setError("Por favor ingrese pdv");
             }
 
-            if (getIdPdvPorNombre(etNombrePDV.getText().toString()) == 0){
+            if (getIdPdvPorNombre(etNombrePDV.getText().toString()) == 0) {
                 isOk = false;
                 new classCustomToast(getActivity()).Show_ToastError("Por favor seleccione un punto de venta de la lista.");
             }

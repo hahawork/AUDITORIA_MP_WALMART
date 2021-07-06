@@ -12,5 +12,12 @@
 
     <string name="strTELEFONO">Teléfono</string>
     <string name="strEMAIL">E-mail</string>
+    <string name="title_activity_envios_pendientes">Envios Pendientes</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_oportunidades">Oportunidades</string>
+    <string name="title_activity_hand_held">MP Hand Held</string>
+    <string name="title_activity_configuracion">Configuración</string>
+    <string name="title_activity_crear_presentaciones">Crear Presentaciones</string>
 
 </resources>

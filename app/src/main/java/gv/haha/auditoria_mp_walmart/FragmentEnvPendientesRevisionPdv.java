@@ -20,18 +20,16 @@ import java.util.List;
 
 import gv.haha.auditoria_mp_walmart.clases.BaseDatos;
 import gv.haha.auditoria_mp_walmart.clases.Globales;
+import gv.haha.auditoria_mp_walmart.clases.classCustomToast;
 import gv.haha.auditoria_mp_walmart.clases.classWebService;
 
-import static gv.haha.auditoria_mp_walmart.clases.Variables.ENV_PEND_ACTIVID_COMERC;
-import static gv.haha.auditoria_mp_walmart.clases.Variables.ENV_PEND_EVAL_DISPLAY;
-import static gv.haha.auditoria_mp_walmart.clases.Variables.ENV_PEND_REVIS_PDV;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.SETT_COD_USUARIO;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_FOTO_INDCADOR;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_DETALLE;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_ENCABEZADO;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.VAR_PARAMETRO;
 
-public class FragmentEnvPendientes extends Fragment {
+public class FragmentEnvPendientesRevisionPdv extends Fragment {
 
     BaseDatos baseDatos;
     Cursor cursor;
@@ -41,7 +39,7 @@ public class FragmentEnvPendientes extends Fragment {
     List<classWebService> paramRevisPdv = new ArrayList<>();
 
 
-    public FragmentEnvPendientes() {
+    public FragmentEnvPendientesRevisionPdv() {
         // Required empty public constructor
     }
 
@@ -66,7 +64,7 @@ public class FragmentEnvPendientes extends Fragment {
 
 
         cursor = baseDatos.obtenerRegistroWhereArgs(TBL_REPORTE_ENCABEZADO, "EstadoEnviado = 0 and EstadoTerminado = 1");
-        paramRevisPdv.clear();
+
 
         if (cursor.getCount() > 0) {
 
@@ -83,6 +81,7 @@ public class FragmentEnvPendientes extends Fragment {
                 final String Nombre = cursor.getString(cursor.getColumnIndex("NombrePDV"));
                 String Otrainfo = cursor.getString(cursor.getColumnIndex("FechaRegistro"));
 
+                paramRevisPdv.clear();
                 paramRevisPdv.add(new classWebService("IdPdv", Nombre));
                 paramRevisPdv.add(new classWebService("FechaVisita", cursor.getString(cursor.getColumnIndex("FechaRegistro"))));
                 paramRevisPdv.add(new classWebService("ItemsTienda", cursor.getString(cursor.getColumnIndex("ItemsTienda"))));
@@ -109,10 +108,14 @@ public class FragmentEnvPendientes extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
 
                                         //se ejecuta l web service para enviar el encabezado ala nube
-                                        G.webServiceGuardarRevisionPdvEnc(
-                                                idLocal,
-                                                paramRevisPdv
-                                        );
+                                        if (G.TieneConexion()) {
+                                            G.webServiceGuardarRevisionPdvEnc(
+                                                    idLocal,
+                                                    paramRevisPdv
+                                            );
+                                        }else{
+                                            new classCustomToast(getActivity()).Show_ToastError("No tienes conexión a internet");
+                                        }
                                     }
                                 })
                                 .setNegativeButton("Borrar", new DialogInterface.OnClickListener() {
@@ -134,8 +137,8 @@ public class FragmentEnvPendientes extends Fragment {
         return view;
     }
 
-    public static FragmentEnvPendientes newInstance(int TipoEnvio) {
-        FragmentEnvPendientes myFragment = new FragmentEnvPendientes();
+    public static FragmentEnvPendientesRevisionPdv newInstance(int TipoEnvio) {
+        FragmentEnvPendientesRevisionPdv myFragment = new FragmentEnvPendientesRevisionPdv();
         Bundle args = new Bundle();
         args.putInt(VAR_PARAMETRO, TipoEnvio);
         myFragment.setArguments(args);

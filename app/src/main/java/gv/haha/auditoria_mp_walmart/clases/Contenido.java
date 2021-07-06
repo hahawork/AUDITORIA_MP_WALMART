@@ -19,6 +19,10 @@ public class Contenido {
     private int Aplicado, Pendiente;
     private boolean PermiteFoto;
 
+    public Contenido(int numIndicador, String indicador) {
+        NumIndicador = numIndicador;
+        Indicador = indicador;
+    }
 
     public Contenido(int numIndicador, String indicador, boolean permiteFoto) {
         NumIndicador = numIndicador;

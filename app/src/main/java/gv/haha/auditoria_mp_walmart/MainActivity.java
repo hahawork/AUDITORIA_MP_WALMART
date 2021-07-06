@@ -1,29 +1,26 @@
 package gv.haha.auditoria_mp_walmart;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import gv.haha.auditoria_mp_walmart.clases.BaseDatos;
@@ -38,18 +35,17 @@ import static android.Manifest.permission.GET_ACCOUNTS;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.SETT_COD_USUARIO;
-import static gv.haha.auditoria_mp_walmart.clases.Variables.SETT_FECHA_ULTIM_BK_DB_CSV;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.SETT_NOMBRE_USUARIO;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_EVAL_DISPLAY_ENC;
-import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_NOMBRE_DISPLAY;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_OPORTUNIDADES;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_PUNTOSDEVENTA;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_ENCABEZADO;
-import static gv.haha.auditoria_mp_walmart.clases.Variables.option_verificaactualizacion;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_RPT_ACTIVIDAD_COMERCIAL;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    Button btnRevisionpdv, btnEvaluardisplay;
+    Button btnRevisionpdv, btnEvaluardisplay, btnActividadComercial, btnOportunidades, btnVerificador, btnCrearPresentacion;
 
     Globales G;
     BaseDatos baseDatos;
@@ -76,14 +72,20 @@ public class MainActivity extends AppCompatActivity
 
             G.enviarEvaluacionDisplayEncabezado();
 
-            obtenerListaDisplayOnline();
+            G.enviarActividadComercial();
         }
 
 
         try {
 
-            baseDatos.exportDB2CSV();
-            G.BackupDatabase();
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            } else {
+
+                baseDatos.exportDB2CSV();
+                G.BackupDatabase();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,6 +116,14 @@ public class MainActivity extends AppCompatActivity
         btnRevisionpdv.setOnClickListener(this);
         btnEvaluardisplay = (Button) findViewById(R.id.btnEvaluardisplay_MA);
         btnEvaluardisplay.setOnClickListener(this);
+        btnActividadComercial = (Button) findViewById(R.id.btnActividadComercial_MA);
+        btnActividadComercial.setOnClickListener(this);
+        btnOportunidades = (Button) findViewById(R.id.btnOportunidades_MA);
+        btnOportunidades.setOnClickListener(this);
+        btnVerificador = (Button) findViewById(R.id.btnVerificador_MA);
+        btnVerificador.setOnClickListener(this);
+        btnCrearPresentacion=findViewById(R.id.btnCrearPresentacion_MA);
+        btnCrearPresentacion.setOnClickListener(this);
 
         /**
          * para verificar una nueva version de la aplicacion en el servidor
@@ -125,7 +135,6 @@ public class MainActivity extends AppCompatActivity
             arrParams.clear();
             arrParams.add(new classWebService("version", String.valueOf(G.getVersionApp())));
             arrParams.add(new classWebService("idapp", "8"));
-
             G.webServiceVerificaNuevaVersion(arrParams);
 
         }
@@ -170,20 +179,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void obtenerListaDisplayOnline(){
+    private void obtenerListaDisplayOnline() {
         try {
-
-            Cursor cursor = baseDatos.obtenerMaxRegistro(TBL_NOMBRE_DISPLAY, "idEnviado");
-            if (cursor.moveToFirst()) {
-                G.wsObtnerNombresDisplayOnline( cursor.getInt(cursor.getColumnIndex("idEnviado")));
-            } else {
+            if (G.TieneConexion()) {
                 G.wsObtnerNombresDisplayOnline(0);
+            } else {
+                new classCustomToast(this).Show_ToastError("No tienes conexión a internet para actualizar la lista.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -213,13 +220,18 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_ajuste) {
 
+            startActivity(new Intent(this,Configuracion.class));
 
         }
-        if (id==R.id.nav_descargarDisplay){
-            if(G.TieneConexion()) {
+        if (id == R.id.nav_descargarDisplay) {
+            if (G.TieneConexion()) {
                 obtenerListaDisplayOnline();
             }
         }
+        if (id == R.id.nav_envioPendientes) {
+            startActivity(new Intent(this, EnviosPendientes.class));
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -235,6 +247,22 @@ public class MainActivity extends AppCompatActivity
         } else if (view == btnEvaluardisplay) {
 
             startActivity(new Intent(this, EvaluacionDisplay.class));
+
+        } else if (view == btnActividadComercial) {
+
+            startActivity(new Intent(this, ActividadComercial.class));
+
+        } else if (view == btnOportunidades) {
+
+            startActivity(new Intent(this, Oportunidades.class));
+
+        } else if (view == btnVerificador) {
+
+            startActivity(new Intent(this, HandHeld.class));
+
+        }else if (view==btnCrearPresentacion){
+
+            startActivity(new Intent(this, CrearPresentaciones.class));
         }
     }
 
@@ -269,6 +297,37 @@ public class MainActivity extends AppCompatActivity
             //agregar el nuevo campo
             baseDatos.AgregarColumna(TBL_REPORTE_ENCABEZADO, "idEnviado", "integer");
         }
+
+        //si no existe el campo
+        if (!baseDatos.ExisteColumna(TBL_RPT_ACTIVIDAD_COMERCIAL, "fotopath")) {
+            //agregar el nuevo campo
+            baseDatos.AgregarColumna(TBL_RPT_ACTIVIDAD_COMERCIAL, "fotopath", "varchar(100)");
+        }
+        //si no existe el campo
+        if (!baseDatos.ExisteColumna(TBL_RPT_ACTIVIDAD_COMERCIAL, "InventarioActual")) {
+            //agregar el nuevo campo
+            baseDatos.AgregarColumna(TBL_RPT_ACTIVIDAD_COMERCIAL, "InventarioActual", "integer");
+        }
+
+        //si no existe el campo
+        if (!baseDatos.ExisteColumna(TBL_RPT_ACTIVIDAD_COMERCIAL, "Comentarios")) {
+            //agregar el nuevo campo
+            baseDatos.AgregarColumna(TBL_RPT_ACTIVIDAD_COMERCIAL, "Comentarios", "varchar(500)");
+        }
+
+        if (!baseDatos.ExisteColumna(TBL_OPORTUNIDADES, "AreaResponsable")) {
+            //agregar el nuevo campo
+            baseDatos.AgregarColumna(TBL_OPORTUNIDADES, "AreaResponsable", "varchar(100)");
+        }
+        if (!baseDatos.ExisteColumna(TBL_OPORTUNIDADES, "Producto")) {
+            //agregar el nuevo campo
+            baseDatos.AgregarColumna(TBL_OPORTUNIDADES, "Producto", "varchar(100)");
+        }
+        if (!baseDatos.ExisteColumna(TBL_OPORTUNIDADES, "Solucion")) {
+            //agregar el nuevo campo
+            baseDatos.AgregarColumna(TBL_OPORTUNIDADES, "Solucion", "varchar(500)");
+        }
+
     }
 
 }

@@ -24,22 +24,24 @@ import gv.haha.auditoria_mp_walmart.clases.classCustomToast;
 import gv.haha.auditoria_mp_walmart.clases.classWebService;
 
 import static gv.haha.auditoria_mp_walmart.clases.Variables.SETT_COD_USUARIO;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_EVAL_DISPLAY_DET;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_EVAL_DISPLAY_ENC;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_FOTO_INDCADOR;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_DETALLE;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_ENCABEZADO;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.VAR_PARAMETRO;
 
-public class FragmentEnvPendientesRevisionPdv extends Fragment {
+public class FragmentEnvPendientesEvaluacionDisplay extends Fragment {
 
     BaseDatos baseDatos;
     Cursor cursor;
     LinearLayout llDatos;
     Globales G;
     SharedPreferences setting;
-    List<classWebService> paramRevisPdv = new ArrayList<>();
+    List<classWebService> params = new ArrayList<>();
 
 
-    public FragmentEnvPendientesRevisionPdv() {
+    public FragmentEnvPendientesEvaluacionDisplay() {
         // Required empty public constructor
     }
 
@@ -63,8 +65,7 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
         setting = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 
-        cursor = baseDatos.obtenerRegistroWhereArgs(TBL_REPORTE_ENCABEZADO, "EstadoEnviado = 0 and EstadoTerminado = 1");
-        paramRevisPdv.clear();
+        cursor = baseDatos.obtenerRegistroWhereArgs(TBL_EVAL_DISPLAY_ENC, "EstadoEnviado = 0 and idEnviado = 0");
 
         if (cursor.getCount() > 0) {
 
@@ -77,19 +78,19 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
                 TextView tvNombre = (TextView) rowView.findViewById(R.id.tvInform_envPendRow);
                 TextView tvOtraInfo = (TextView) rowView.findViewById(R.id.tvOtroDato_envPendRow);
 
-                final int idLocal = cursor.getInt(cursor.getColumnIndex("IdRptEnc"));
-                final String Nombre = cursor.getString(cursor.getColumnIndex("NombrePDV"));
-                String Otrainfo = cursor.getString(cursor.getColumnIndex("FechaRegistro"));
+                final int idLocal =  cursor.getInt(cursor.getColumnIndex("idEvalDispEnc"));
+                final String Nombre =  cursor.getString(cursor.getColumnIndex("NombreDislay"));
+                String Otrainfo = cursor.getString(cursor.getColumnIndex("FechReg"));
 
-                paramRevisPdv.add(new classWebService("IdPdv", Nombre));
-                paramRevisPdv.add(new classWebService("FechaVisita", cursor.getString(cursor.getColumnIndex("FechaRegistro"))));
-                paramRevisPdv.add(new classWebService("ItemsTienda", cursor.getString(cursor.getColumnIndex("ItemsTienda"))));
-                paramRevisPdv.add(new classWebService("ItemsAgotados", cursor.getString(cursor.getColumnIndex("ItemsAgotados"))));
-                paramRevisPdv.add(new classWebService("Participacion", cursor.getString(cursor.getColumnIndex("Participacion"))));
-                paramRevisPdv.add(new classWebService("HoraVisita", cursor.getString(cursor.getColumnIndex("HoraVisita"))));
-                paramRevisPdv.add(new classWebService("ResponsableTurno", cursor.getString(cursor.getColumnIndex("ResponsableTurno"))));
-                paramRevisPdv.add(new classWebService("Observaciones", cursor.getString(cursor.getColumnIndex("Observaciones"))));
-                paramRevisPdv.add(new classWebService("IdUsuario", String.valueOf(setting.getInt(SETT_COD_USUARIO, 0))));
+                params.clear();
+                params.add(new classWebService("NombreDislay", cursor.getString(cursor.getColumnIndex("NombreDislay"))));
+                params.add(new classWebService("IdDislay", cursor.getString(cursor.getColumnIndex("IdDislay"))));
+                params.add(new classWebService("idPdv", cursor.getString(cursor.getColumnIndex("idPdv"))));
+                params.add(new classWebService("NombrePDV", cursor.getString(cursor.getColumnIndex("NombrePDV"))));
+                params.add(new classWebService("FechReg", cursor.getString(cursor.getColumnIndex("FechReg"))));
+                params.add(new classWebService("GPSCoordenadas", cursor.getString(cursor.getColumnIndex("GPSCoordenadas"))));
+                params.add(new classWebService("IdUsuario", String.valueOf(setting.getInt(SETT_COD_USUARIO, 0))));
+
 
                 tvidLocal.setText(String.valueOf(idLocal));
                 tvNombre.setText(Nombre);
@@ -108,9 +109,9 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
 
                                         //se ejecuta l web service para enviar el encabezado ala nube
                                         if (G.TieneConexion()) {
-                                            G.webServiceGuardarRevisionPdvEnc(
+                                            G.webServiceGuardarEvaluacionDisplayEnc(
                                                     idLocal,
-                                                    paramRevisPdv
+                                                    params
                                             );
                                         }else{
                                             new classCustomToast(getActivity()).Show_ToastError("No tienes conexión a internet");
@@ -120,9 +121,8 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
                                 .setNegativeButton("Borrar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        baseDatos.BorrarRegistroWhere(TBL_REPORTE_ENCABEZADO, "IdRptEnc = " + idLocal);
-                                        baseDatos.BorrarRegistroWhere(TBL_REPORTE_DETALLE, "idRptEnc = " + idLocal);
-                                        baseDatos.BorrarRegistroWhere(TBL_FOTO_INDCADOR, "idRptEnc = " + idLocal);
+                                        baseDatos.BorrarRegistroWhere(TBL_EVAL_DISPLAY_ENC, "idEvalDispEnc = " + idLocal);
+                                        baseDatos.BorrarRegistroWhere(TBL_EVAL_DISPLAY_DET, "idEDE = " + idLocal);
 
                                         llDatos.removeView(rowView);
                                     }
@@ -136,8 +136,8 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
         return view;
     }
 
-    public static FragmentEnvPendientesRevisionPdv newInstance(int TipoEnvio) {
-        FragmentEnvPendientesRevisionPdv myFragment = new FragmentEnvPendientesRevisionPdv();
+    public static FragmentEnvPendientesEvaluacionDisplay newInstance(int TipoEnvio) {
+        FragmentEnvPendientesEvaluacionDisplay myFragment = new FragmentEnvPendientesEvaluacionDisplay();
         Bundle args = new Bundle();
         args.putInt(VAR_PARAMETRO, TipoEnvio);
         myFragment.setArguments(args);

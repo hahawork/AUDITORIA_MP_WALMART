@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".HandHeld"
+    tools:showIn="@layout/activity_hand_held">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:padding="2dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="3dp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Punto de venta">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/actvNombrePDV_HH"
+                                android:textColor="@android:color/black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="1" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:hint="NumTienda"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/etNumTienda_HH"
+                                android:layout_width="wrap_content"
+                                android:ems="4"
+                                android:textColor="@android:color/black"
+                                android:layout_height="match_parent"
+                                android:text="" />
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/etTextSearchHandHeld_HH"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_home_left"
+                            android:drawableRight="@android:drawable/ic_menu_search"
+                            android:ems="10"
+                            android:imeOptions="actionSearch"
+                            android:imeActionId="999"
+                            android:imeActionLabel="Buscar"
+                            android:textColor="@android:color/black"
+                            android:inputType="text"
+                            android:paddingLeft="10dp" />
+
+                        <Button
+                            android:id="@+id/btnSearch_HH"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/button_home_right"
+                            android:text="Buscar" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.appyvet.materialrangebar.RangeBar xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/rangebar1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            app:mrb_pinColor="#6c3f6a"
+                            app:mrb_pinMaxFont="15sp"
+                            app:mrb_pinMinFont="12sp"
+                            app:mrb_pinRadius="14dp"
+                            app:mrb_pinTextColor="@color/white"
+                            app:mrb_rangeBar="true"
+                            app:mrb_rangeBarPaddingBottom="20dp"
+                            app:mrb_rangeBar_rounded="true"
+                            app:mrb_selectorBoundaryColor="@color/colorAccent"
+                            app:mrb_selectorBoundarySize="2dp"
+                            app:mrb_selectorSize="10dp"
+                            app:mrb_temporaryPins="true"
+                            app:mrb_tickInterval="1"
+                            app:mrb_tickStart="1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llHandHeldItems_HH"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="1dp" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imageViewShowScreenshot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/tvrecomendaciones_HH"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="#aaa"
+                android:text="- Seleccione un punto de venta.\n- Ingresar o escanear el código.\n- Buscar.\n
+\n- Debido a la gran cantidad de datos, la informacion será descargada según pdv seleccionado.
+Si no tiene pdv, debes descargalos en la opción DESCARGAR->PUNTOS DE VENTA." />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

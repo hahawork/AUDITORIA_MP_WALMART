@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,19 +28,20 @@ import static gv.haha.auditoria_mp_walmart.clases.Variables.SETT_COD_USUARIO;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_FOTO_INDCADOR;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_DETALLE;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_ENCABEZADO;
+import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_RPT_ACTIVIDAD_COMERCIAL;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.VAR_PARAMETRO;
 
-public class FragmentEnvPendientesRevisionPdv extends Fragment {
+public class FragmentEnvPendientesActividadComercial extends Fragment {
 
     BaseDatos baseDatos;
     Cursor cursor;
     LinearLayout llDatos;
     Globales G;
     SharedPreferences setting;
-    List<classWebService> paramRevisPdv = new ArrayList<>();
+    List<classWebService> params = new ArrayList<>();
 
 
-    public FragmentEnvPendientesRevisionPdv() {
+    public FragmentEnvPendientesActividadComercial() {
         // Required empty public constructor
     }
 
@@ -63,8 +65,8 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
         setting = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 
-        cursor = baseDatos.obtenerRegistroWhereArgs(TBL_REPORTE_ENCABEZADO, "EstadoEnviado = 0 and EstadoTerminado = 1");
-        paramRevisPdv.clear();
+        cursor = baseDatos.obtenerRegistroWhereArgs(TBL_RPT_ACTIVIDAD_COMERCIAL, "EstadoEnviado = 0 and idEnviado = 0");
+        params.clear();
 
         if (cursor.getCount() > 0) {
 
@@ -77,19 +79,15 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
                 TextView tvNombre = (TextView) rowView.findViewById(R.id.tvInform_envPendRow);
                 TextView tvOtraInfo = (TextView) rowView.findViewById(R.id.tvOtroDato_envPendRow);
 
-                final int idLocal = cursor.getInt(cursor.getColumnIndex("IdRptEnc"));
-                final String Nombre = cursor.getString(cursor.getColumnIndex("NombrePDV"));
+                final int idLocal = cursor.getInt(cursor.getColumnIndex("idRptActivComerc"));
+                final String Nombre = cursor.getString(cursor.getColumnIndex("idData"));
                 String Otrainfo = cursor.getString(cursor.getColumnIndex("FechaRegistro"));
 
-                paramRevisPdv.add(new classWebService("IdPdv", Nombre));
-                paramRevisPdv.add(new classWebService("FechaVisita", cursor.getString(cursor.getColumnIndex("FechaRegistro"))));
-                paramRevisPdv.add(new classWebService("ItemsTienda", cursor.getString(cursor.getColumnIndex("ItemsTienda"))));
-                paramRevisPdv.add(new classWebService("ItemsAgotados", cursor.getString(cursor.getColumnIndex("ItemsAgotados"))));
-                paramRevisPdv.add(new classWebService("Participacion", cursor.getString(cursor.getColumnIndex("Participacion"))));
-                paramRevisPdv.add(new classWebService("HoraVisita", cursor.getString(cursor.getColumnIndex("HoraVisita"))));
-                paramRevisPdv.add(new classWebService("ResponsableTurno", cursor.getString(cursor.getColumnIndex("ResponsableTurno"))));
-                paramRevisPdv.add(new classWebService("Observaciones", cursor.getString(cursor.getColumnIndex("Observaciones"))));
-                paramRevisPdv.add(new classWebService("IdUsuario", String.valueOf(setting.getInt(SETT_COD_USUARIO, 0))));
+                String[] campos = cursor.getColumnNames();
+                for (int i = 0; i < campos.length; i++) {
+                    params.add(new classWebService(campos[i], cursor.getString(cursor.getColumnIndex(campos[i]))));
+                }
+                params.add(new classWebService("idUsuario", String.valueOf(setting.getInt(SETT_COD_USUARIO, 0))));
 
                 tvidLocal.setText(String.valueOf(idLocal));
                 tvNombre.setText(Nombre);
@@ -108,11 +106,11 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
 
                                         //se ejecuta l web service para enviar el encabezado ala nube
                                         if (G.TieneConexion()) {
-                                            G.webServiceGuardarRevisionPdvEnc(
+                                            /*G.webServiceGuardarActividadComercial(
                                                     idLocal,
-                                                    paramRevisPdv
-                                            );
-                                        }else{
+                                                    params
+                                            );*/
+                                        } else {
                                             new classCustomToast(getActivity()).Show_ToastError("No tienes conexión a internet");
                                         }
                                     }
@@ -120,9 +118,7 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
                                 .setNegativeButton("Borrar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        baseDatos.BorrarRegistroWhere(TBL_REPORTE_ENCABEZADO, "IdRptEnc = " + idLocal);
-                                        baseDatos.BorrarRegistroWhere(TBL_REPORTE_DETALLE, "idRptEnc = " + idLocal);
-                                        baseDatos.BorrarRegistroWhere(TBL_FOTO_INDCADOR, "idRptEnc = " + idLocal);
+                                        baseDatos.BorrarRegistroWhere(TBL_RPT_ACTIVIDAD_COMERCIAL, "idRptActivComerc = " + idLocal);
 
                                         llDatos.removeView(rowView);
                                     }
@@ -136,8 +132,8 @@ public class FragmentEnvPendientesRevisionPdv extends Fragment {
         return view;
     }
 
-    public static FragmentEnvPendientesRevisionPdv newInstance(int TipoEnvio) {
-        FragmentEnvPendientesRevisionPdv myFragment = new FragmentEnvPendientesRevisionPdv();
+    public static FragmentEnvPendientesActividadComercial newInstance(int TipoEnvio) {
+        FragmentEnvPendientesActividadComercial myFragment = new FragmentEnvPendientesActividadComercial();
         Bundle args = new Bundle();
         args.putInt(VAR_PARAMETRO, TipoEnvio);
         myFragment.setArguments(args);

@@ -1,15 +1,9 @@
 package gv.haha.auditoria_mp_walmart.clases;
 
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.opencsv.CSVWriter;
 
@@ -21,14 +15,12 @@ import java.util.Date;
 import java.util.List;
 
 import static gv.haha.auditoria_mp_walmart.clases.Variables.CARPETA_RECURSOS;
-import static gv.haha.auditoria_mp_walmart.clases.Variables.SETT_FECHA_ULTIM_BK_DB_CSV;
 import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_PUNTOSDEVENTA;
-import static gv.haha.auditoria_mp_walmart.clases.Variables.TBL_REPORTE_ENCABEZADO;
 
 public class BaseDatos {
 
-    SQLiteDatabase db;
     static Context mcontext;
+    SQLiteDatabase db;
 
     public BaseDatos(Context context) {
 
@@ -42,6 +34,43 @@ public class BaseDatos {
             db.close();
 
             return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1l;
+        }
+    }
+
+    public Long insertarRegistroSiNoExiste(String nombretabla, String WhereVerificar, ContentValues values) {
+        try {
+            db = new SQLHelper(mcontext).getWritableDatabase();
+            Cursor cexist = db.rawQuery("select * from " + nombretabla + " where " + WhereVerificar, null);
+            if (cexist.getCount() == 0) {
+                Long res = db.insert(nombretabla, null, values);
+                db.close();
+                return res;
+            } else {
+                return 0l;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1l;
+        }
+    }
+
+    public Long insertarRegistroSiNoExisteThenUpdate(String nombretabla, String WhereVerificar, ContentValues values) {
+        try {
+            db = new SQLHelper(mcontext).getWritableDatabase();
+            Cursor cexist = db.rawQuery("select * from " + nombretabla + " where " + WhereVerificar, null);
+            if (cexist.getCount() == 0) {
+                Long res = db.insert(nombretabla, null, values);
+                db.close();
+                return res;
+            } else {
+                int res = db.update(nombretabla, values, WhereVerificar, null);
+                return Long.parseLong("" + res);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +98,21 @@ public class BaseDatos {
         try {
             db = new SQLHelper(mcontext).getWritableDatabase();
             cMax = db.rawQuery("SELECT * FROM " + nombreTabla, null);
+
+            //db.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cMax;
+    }
+
+    public Cursor obtenerDistinctRegistro(String nombreTabla, String c1, String c2) {
+
+        Cursor cMax = null;
+        try {
+            db = new SQLHelper(mcontext).getWritableDatabase();
+            cMax = db.rawQuery("SELECT DISTINCT " + c1 + ", " + c2 + " FROM " + nombreTabla + " ORDER BY " + c2, null);
 
             //db.close();
 
@@ -141,7 +185,8 @@ public class BaseDatos {
         try {
             db = new SQLHelper(mcontext).getWritableDatabase();
             String sql = "DELETE FROM " + nombreTabla;
-            db.execSQL(sql);
+            db.delete(nombreTabla, null, null);
+            //db.execSQL(sql);
 
             //db.close();
 
@@ -196,7 +241,7 @@ public class BaseDatos {
         try {
 
             db = new SQLHelper(mcontext).getWritableDatabase();
-            Cursor cursor = db.rawQuery("select distinct " + campo + " from " + tabla, null);
+            Cursor cursor = db.rawQuery("select distinct " + campo + " from " + tabla + " ORDER BY " + campo, null);
 
             String[] array = new String[cursor.getCount()];
 
@@ -254,21 +299,6 @@ public class BaseDatos {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Agrega una tabla a la base de datos
-     *
-     * @param queryTabla Consulta de creacion de la tabla
-     */
-    public void AgregarTabla(String queryTabla) {
-        try {
-            db = new SQLHelper(mcontext).getWritableDatabase();
-            db.execSQL(queryTabla);
-            db.close();
-        } catch (Exception e) {
-
         }
     }
 
